@@ -11,8 +11,6 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: Check if JSON is passed without null and all
-
 public class JsonUtils {
 
     public static Sandwich parseSandwichJson(String json) throws JSONException {

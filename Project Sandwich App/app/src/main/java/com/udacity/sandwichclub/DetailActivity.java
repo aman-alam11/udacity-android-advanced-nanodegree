@@ -20,10 +20,7 @@ import org.json.JSONException;
 
 import java.util.List;
 
-
-// TODO: Add parallax effect to image on scroll
 // REFERENCES -
-// Placeholder Image is open source and taken from : https://www.pexels.com/photo/carrots-food-fresh-freshness-616404/
 // Error Image is open source and taken from : https://pixabay.com/en/monitor-404-error-problem-page-1350918/
 
 public class DetailActivity extends AppCompatActivity {
