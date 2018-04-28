@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="layout_margin_bottom_constraint_layout">10dp</dimen>
+    <dimen name="layout_margin_top_labels">5dp</dimen>
+    <dimen name="layout_margin_side_labels">8dp</dimen>
+    <dimen name="width_label_titles">110dp</dimen>
+</resources>
