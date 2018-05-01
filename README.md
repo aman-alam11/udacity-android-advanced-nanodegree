@@ -9,4 +9,4 @@ The recycler view click would open up new activities with all the data populated
 * Constraint layout inside Coordinator layout using nested scroll view
 * ButterKnife (in progress)
 
-### Project 2: -
+### Project 2: -----
