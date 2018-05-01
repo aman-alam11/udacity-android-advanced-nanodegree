@@ -1,8 +1,15 @@
 package com.udacity.sandwichclub;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableWrapper;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.DeadObjectException;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Layout;
@@ -13,15 +20,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
 
 import org.json.JSONException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 // REFERENCES -
 // Error Image is open source and taken from : https://pixabay.com/en/monitor-404-error-problem-page-1350918/
+//TODO: View Binding butterknife
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -36,6 +49,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView originatingPlaceTV;
     //For the description about the food
     private TextView descriptionTV;
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -86,13 +100,14 @@ public class DetailActivity extends AppCompatActivity {
                 .error(R.drawable.errorimage)
                 .into(ingredientsIv);
 
+
         setTitle(sandwich.getMainName());
     }
 
 
     /**
-    * A function to gracefully handle error in case Sandwich data can't be displayed due to any reason
-    * */
+     * A function to gracefully handle error in case Sandwich data can't be displayed due to any reason
+     */
     private void closeOnError() {
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
@@ -100,23 +115,24 @@ public class DetailActivity extends AppCompatActivity {
 
 
     /**
-    * Set the multiple text fields from the parsed JSON
-    * Set the views and handle error cases
-    * @param sandwich object which was clicked on, is sent here
-    * */
+     * Set the multiple text fields from the parsed JSON
+     * Set the views and handle error cases
+     *
+     * @param sandwich object which was clicked on, is sent here
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void populateUI(Sandwich sandwich) {
-
-        // Handle the lists in a different function
+//         Handle the lists in a different function
         populateListCases(sandwich.getIngredients(), ingredientsTV);
         populateListCases(sandwich.getAlsoKnownAs(), alternateNameTV);
 
         // Check for empty strings
-        if(TextUtils.isEmpty(sandwich.getPlaceOfOrigin())){
+        if (TextUtils.isEmpty(sandwich.getPlaceOfOrigin())) {
             originatingPlaceTV.setText(R.string.blank_field_JSON_error_message);
-        }else {
+        } else {
             originatingPlaceTV.setText(sandwich.getPlaceOfOrigin());
         }
+
         descriptionTV.setText(sandwich.getDescription());
 
         // Set center justified in case of Android Versions above Android O
@@ -127,9 +143,9 @@ public class DetailActivity extends AppCompatActivity {
 
 
     /**
-    * In case of List, set different text based on List size
-    * */
-    private void populateListCases(List<String> sandwichList, TextView resultingTextView){
+     * In case of List, set different text based on List size
+     */
+    private void populateListCases(List<String> sandwichList, TextView resultingTextView) {
 
         switch (sandwichList.size()) {
 
@@ -148,6 +164,5 @@ public class DetailActivity extends AppCompatActivity {
                 break;
         }
     }
-
 
 }
