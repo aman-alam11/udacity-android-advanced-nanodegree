@@ -7,4 +7,7 @@
     <dimen name="layout_margin_side_labels">8dp</dimen>
     <dimen name="width_label_titles">110dp</dimen>
     <dimen name="app_bar_layout_height">300dp</dimen>
+    <dimen name="app_bar_title_start">48dp</dimen>
+    <dimen name="app_bar_title_end">64dp</dimen>
+
 </resources>

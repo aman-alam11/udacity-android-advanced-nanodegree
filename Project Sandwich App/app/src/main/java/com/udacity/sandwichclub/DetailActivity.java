@@ -32,6 +32,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.ButterKnife;
+
 // REFERENCES -
 // Error Image is open source and taken from : https://pixabay.com/en/monitor-404-error-problem-page-1350918/
 //TODO: View Binding butterknife
@@ -42,27 +46,21 @@ public class DetailActivity extends AppCompatActivity {
     private static final int DEFAULT_POSITION = -1;
 
     //For list of alternate names of food
-    private TextView alternateNameTV;
+    @BindView(R.id.also_known_tv) TextView alternateNameTV;
     //For list of ingredients
-    private TextView ingredientsTV;
+    @BindView(R.id.ingredients_tv) TextView ingredientsTV;
     //For the name of originating Place
-    private TextView originatingPlaceTV;
+    @BindView(R.id.origin_tv) TextView originatingPlaceTV;
     //For the description about the food
-    private TextView descriptionTV;
-
+    @BindView(R.id.description_tv) TextView descriptionTV;
+    @BindView(R.id.image_iv) ImageView ingredientsIv;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-
-        ImageView ingredientsIv = findViewById(R.id.image_iv);
-        alternateNameTV = findViewById(R.id.also_known_tv);
-        ingredientsTV = findViewById(R.id.ingredients_tv);
-        originatingPlaceTV = findViewById(R.id.origin_tv);
-        descriptionTV = findViewById(R.id.description_tv);
+        ButterKnife.bind(this);
 
         //Check if the Intent is null (on click from previous activity Intent)
         Intent intent = getIntent();
@@ -122,7 +120,7 @@ public class DetailActivity extends AppCompatActivity {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void populateUI(Sandwich sandwich) {
-//         Handle the lists in a different function
+        // Handle the lists in a different function
         populateListCases(sandwich.getIngredients(), ingredientsTV);
         populateListCases(sandwich.getAlsoKnownAs(), alternateNameTV);
 
