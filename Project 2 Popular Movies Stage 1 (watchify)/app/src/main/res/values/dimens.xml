@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="details_appbar_layout_height">300dp</dimen>
+    <dimen name="details_appbar_title_end">64dp</dimen>
+    <dimen name="details_appbar_title_start">48dp</dimen>
+    <dimen name="toolbar_height">25dp</dimen>
+    <dimen name="card_view_margin">10dp</dimen>
+    <dimen name="card_view_padding">10dp</dimen>
+    <dimen name="card_view_corner_radius">10dp</dimen>
+    <dimen name="text_size_movie_title_details_screen">40sp</dimen>
+    <dimen name="card_view_elevation">20dp</dimen>
+
+    <!--Splash Screen-->
+    <dimen name="splash_screen_logo_size">200sp</dimen>
+    <dimen name="progress_bar_dimen">100dp</dimen>
+
+
+
+    <!--First Run Fragments-->
+    <dimen name="text_view_margin_top">10dp</dimen>
+    <dimen name="text_view_text_size">20sp</dimen>
+    <dimen name="button_padding">5dp</dimen>
+    <dimen name="button_width">150dp</dimen>
+    <dimen name="button_height">120dp</dimen>
+    <dimen name="done_button_margin">20dp</dimen>
+
+    <!--Item Recycler View-->
+    <dimen name="item_alpha_value_card_view">0.8</dimen>
+    <dimen name="item_margin_card_view">5dp</dimen>
+
+</resources>

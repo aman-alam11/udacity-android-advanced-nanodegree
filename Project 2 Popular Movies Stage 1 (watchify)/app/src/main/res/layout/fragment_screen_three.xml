@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccentGRAY"
+    android:orientation="vertical"
+    tools:context=".FirstRunScreens.ScreenThree">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/text_view_margin_top"
+        android:layout_weight="1"
+        android:text="@string/text_fragment_three"
+        android:textAlignment="center"
+        android:textColor="@color/colorBrightGreen"
+        android:textSize="@dimen/text_view_text_size" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:gravity="center"
+        android:text="W"
+        android:textColor="@color/colorBrightGreen"
+        android:textSize="@dimen/splash_screen_logo_size" />
+
+
+    <Button
+        android:layout_margin="@dimen/done_button_margin"
+        android:layout_weight="1"
+        android:id="@+id/doneButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="@string/done_button_title"
+        android:textColor="@color/colorBlack" />
+
+</LinearLayout>
