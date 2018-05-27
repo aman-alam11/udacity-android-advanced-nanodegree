@@ -38,7 +38,6 @@ import butterknife.ButterKnife;
 
 // REFERENCES -
 // Error Image is open source and taken from : https://pixabay.com/en/monitor-404-error-problem-page-1350918/
-//TODO: View Binding butterknife
 
 public class DetailActivity extends AppCompatActivity {
 
