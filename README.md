@@ -1,13 +1,7 @@
 # udacity-android-advanced-nanodegree
 As part of Google Udacity Developer Scholarship awarded to me, I have to complete Udacity's Advanced Nanodegree for Android. All my projects will be displayed in this repository
 
-### Project 1: Sandwich App
-This app was developed to parse API response(JSON) without any 3rd party libraries and display it using a recycler view. 
-The recycler view click would open up new activities with all the data populated. The key areas in this project-
-* Coordinate Layout
-* Parallax Effect for app bar using Design Library
-* Constraint layout inside Coordinator layout using nested scroll view
-* ButterKnife
+### Project 1: Sandwich App (Very Basic Stuff of Json Parsing and Recycler View => REMOVED)
 
 ### Project 2: Popular Movies Stage 1 (WATCHIFY)
 This app was developed to get content from API and display it using recycler view. The Key areas in this project in addition to coordinator layout, parallax effect, butterknife (All previous projects) are :
@@ -16,9 +10,18 @@ This app was developed to get content from API and display it using recycler vie
 * Using Picasso to load movie images/posters/backdrops
 * Use Of Parcelable to transfer data with Intent
 * Card Views
-TODO:
-* Animation - Animate M and W by rotating 180 degree on the first run screens
-* Pull down to refresh
-* Pagination after first 10 movies
-* Use View Model
-* Option to change grid view to linear detailed view
+
+### Project 3: Popular Movies Stage 2 (WATCHIFY) - An extension to stage 1
+* Live Data to optimize and remove unnecessary querying of database to check for changes
+* View Model for making the tasks in activity lifecycle aware in case of activity recreation(rotation etc.)
+* Room Object Relational Mapping - making Database Operations easier and optimized
+* Multiple consecutive API calls, Data Parsing and Handling (multiple recycler views)
+* Lambda Functions to optimize code and take advantage of Java 8
+* Thread Executors to deal with multiple threads
+* Singleton Pattern
+* Abstract Factory Pattern
+* Dependency Injection (Butterknife, also used in previous project)
+* Flat View Hierarchy(removed recursive views from stage 1 and obtained a flatter and better view hierarchy using constraint layout)
+
+
+### Project 4: Working on it
