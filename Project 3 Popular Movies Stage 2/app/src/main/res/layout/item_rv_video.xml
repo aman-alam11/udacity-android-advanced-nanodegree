@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/video_card_view"
+    android:layout_width="160dp"
+    android:layout_height="200dp"
+    android:layout_margin="@dimen/card_view_margin"
+    app:cardElevation="20dp"
+    app:cardCornerRadius="5dp"
+    tools:context=".DetailsActivity.DetailsMovie">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/video_thumbnail_image_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="@color/colorAccentGRAY">
+
+        <!--Play Icon-->
+        <ImageView
+            android:id="@+id/play_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:alpha="0.1"
+            android:src="@drawable/baseline_play_arrow_black_18dp" />
+
+        <!--Video Name-->
+        <TextView
+            android:id="@+id/video_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:alpha="0.5"
+            android:textAlignment="center"
+            android:background="#000"
+            android:elevation="10dp"
+            android:padding="5dp"
+            android:textColor="#FFF" />
+
+    </FrameLayout>
+</android.support.v7.widget.CardView>
