@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     boolean isPopularMovieDataVisible = true;
     String savedInstanceDataKey = "POPULAR_MOVIES_VISIBLE";
     public static final String detailsIntentDataKey = "DETAILS_EXTRA";
+    public static final String detailsIntentFavDataKey = "DETAILS_EXTRA_FAV";
     public static final String DATA_TYPE_MOVIE = "MOVIE";
     private static final int NUM_COLUMNS = 2;
     WatchifyAdapter mWatchifyAdapter;
@@ -74,7 +75,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setTitle(getResources().getString(R.string.popular_movies_activity_title));
-        BuildUrl.setContext(this);
 
         /** Restore state in case of configuration changes */
         if (savedInstanceState != null) {

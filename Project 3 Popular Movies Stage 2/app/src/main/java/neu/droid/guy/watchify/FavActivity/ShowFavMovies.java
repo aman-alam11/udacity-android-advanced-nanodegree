@@ -3,6 +3,7 @@ package neu.droid.guy.watchify.FavActivity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import neu.droid.guy.watchify.DetailsActivity.DetailsMovie;
 import neu.droid.guy.watchify.POJO.FavMovies;
 import neu.droid.guy.watchify.R;
 import neu.droid.guy.watchify.Room.AppDatabase;
@@ -29,7 +31,8 @@ import neu.droid.guy.watchify.ViewModel.MainViewModel;
 import neu.droid.guy.watchify.ViewModel.ThreadExecutors;
 import neu.droid.guy.watchify.ViewModel.ViewModelFactory;
 
-public class ShowFavMovies extends AppCompatActivity implements FavMoviesAdapter.onItemClicked {
+public class ShowFavMovies extends AppCompatActivity
+        implements FavMoviesAdapter.onUnfavouriteButtonClicked {
     @BindView(R.id.fav_movies_pb)
     ProgressBar favProgressBar;
     @BindView(R.id.fav_movies_rv)
@@ -136,7 +139,8 @@ public class ShowFavMovies extends AppCompatActivity implements FavMoviesAdapter
                         snackBar.dismiss();
                     }
                 }
-                mFavMoviesAdapter = new FavMoviesAdapter(favMovies, ShowFavMovies.this);
+                mFavMoviesAdapter = new FavMoviesAdapter(favMovies,
+                        ShowFavMovies.this);
                 favRecyclerView.setAdapter(mFavMoviesAdapter);
                 favRecyclerView.setVisibility(View.VISIBLE);
                 favProgressBar.setVisibility(View.INVISIBLE);
@@ -146,12 +150,18 @@ public class ShowFavMovies extends AppCompatActivity implements FavMoviesAdapter
     }
 
     @Override
-    public void getMovieClicked(FavMovies movieToDelete) {
-        mDB = AppDatabase.getInstance(getApplicationContext());
-        ThreadExecutors
-                .getThreadExecutorsInstance()
-                .getDiskExecutor()
-                .execute(() -> mDB.moviesDAO().removeFromFavourites(movieToDelete));
+    public void getMovieClicked(FavMovies movie, Boolean shouldDelete) {
+        if (shouldDelete) {
+            mDB = AppDatabase.getInstance(getApplicationContext());
+            ThreadExecutors
+                    .getThreadExecutorsInstance()
+                    .getDiskExecutor()
+                    .execute(() -> mDB.moviesDAO().removeFromFavourites(movie));
+        } else {
+            Intent openDetailsIntent = new Intent(ShowFavMovies.this, DetailsMovie.class);
+            openDetailsIntent.putExtra("DETAILS_EXTRA_FAV", movie);
+            startActivity(openDetailsIntent);
+        }
     }
 
 }

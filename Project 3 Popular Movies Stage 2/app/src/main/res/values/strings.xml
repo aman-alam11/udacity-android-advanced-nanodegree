@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">Watchify</string>
 
-    <!--INSERT KEY HERE-->
-    <string name="api_key"></string>
-
-
     <string name="unknown_error">Oops! This is embarrassing! Please try again later</string>
     <string name="no_internet_connectivity">No Internet Connection Available</string>
     <string name="no_videos_available">No Videos Available for this Movie</string>

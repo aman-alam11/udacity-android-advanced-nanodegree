@@ -3,16 +3,10 @@ package neu.droid.guy.watchify.NetworkingUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import neu.droid.guy.watchify.BuildConfig;
 import neu.droid.guy.watchify.R;
 
 public class BuildUrl {
-
-    @SuppressLint("StaticFieldLeak")
-    static Context mContext;
-
-    // Handle key using Manifest
-//    private static final String URL_SCHEME = "http";
-//    private static final String TMDB_BASE_AUTHORITY = "api.themoviedb.org";
 
     /**
      * Get the popular movies from API
@@ -37,18 +31,10 @@ public class BuildUrl {
     }
 
     /**
-     * Call this function from activity to deliver context
-     */
-    public static void setContext(Context context) {
-        mContext = context;
-    }
-
-
-    /**
      * Get API_KEY from Resources
      */
     private static String getApiKey() {
-        return mContext.getResources().getString(R.string.api_key);
+        return BuildConfig.MY_MOVIE_DB_API_KEY;
     }
 
 

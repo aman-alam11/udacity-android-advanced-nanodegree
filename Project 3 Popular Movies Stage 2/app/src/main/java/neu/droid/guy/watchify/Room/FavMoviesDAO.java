@@ -20,7 +20,7 @@ public interface FavMoviesDAO {
     @Query("SELECT * FROM FavouritesTable")
     LiveData<List<FavMovies>> getAllFavMovies();
 
-    @Query("SELECT * FROM FavouritesTable where tmdbMovieID = :id")
+    @Query("SELECT * FROM FavouritesTable where id = :id")
     LiveData<FavMovies> getMovieById(String id);
 
     /**

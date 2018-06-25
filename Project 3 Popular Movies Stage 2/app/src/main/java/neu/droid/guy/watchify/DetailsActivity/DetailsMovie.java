@@ -1,17 +1,15 @@
 package neu.droid.guy.watchify.DetailsActivity;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +19,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,22 +30,20 @@ import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import neu.droid.guy.watchify.Lambdas.GetKeysLambda;
+import neu.droid.guy.watchify.NetworkingUtils.BuildUrl;
 import neu.droid.guy.watchify.NetworkingUtils.NetworkConnectivityChecker;
+import neu.droid.guy.watchify.NetworkingUtils.VolleyRequestQueueSingleton;
 import neu.droid.guy.watchify.POJO.FavMovies;
 import neu.droid.guy.watchify.POJO.ListOfReviews;
 import neu.droid.guy.watchify.POJO.ListOfVideos;
 import neu.droid.guy.watchify.POJO.Movie;
 import neu.droid.guy.watchify.POJO.Review;
 import neu.droid.guy.watchify.POJO.Video;
-import neu.droid.guy.watchify.NetworkingUtils.BuildUrl;
-import neu.droid.guy.watchify.NetworkingUtils.VolleyRequestQueueSingleton;
 import neu.droid.guy.watchify.R;
 import neu.droid.guy.watchify.Room.AppDatabase;
 import neu.droid.guy.watchify.ViewModel.AddMovieViewModel;
@@ -56,6 +51,7 @@ import neu.droid.guy.watchify.ViewModel.ThreadExecutors;
 import neu.droid.guy.watchify.ViewModel.ViewModelFactory;
 
 import static neu.droid.guy.watchify.MainActivity.MainActivity.detailsIntentDataKey;
+import static neu.droid.guy.watchify.MainActivity.MainActivity.detailsIntentFavDataKey;
 
 public class DetailsMovie extends AppCompatActivity
         implements VolleyRequestQueueSingleton.JSONRecievedCallback,
@@ -109,7 +105,9 @@ public class DetailsMovie extends AppCompatActivity
     private List<Video> mListOfVideoObjects;
     private List<Review> mListOfReviewObjects;
     private MaterialDialog reviewDialog;
+    private String backdropUrl;
     Movie mMovieObjectData = null;
+    FavMovies mFavMovieObjectData = null;
 
 
     @Override
@@ -117,13 +115,34 @@ public class DetailsMovie extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_movie);
         ButterKnife.bind(this);
-        BuildUrl.setContext(this);
         changeNotificationPaneColor();
         favFab.setVisibility(View.INVISIBLE);
 
         /** Get Data From Intent */
         if (getIntent().getExtras() != null) {
-            mMovieObjectData = getIntent().getExtras().getParcelable(detailsIntentDataKey);
+            if (getIntent().hasExtra(detailsIntentDataKey)) {
+                mMovieObjectData = getIntent().getExtras().getParcelable(detailsIntentDataKey);
+            }
+            if (getIntent().hasExtra(detailsIntentFavDataKey)) {
+                try {
+                    mFavMovieObjectData = getIntent().getExtras().getParcelable(detailsIntentFavDataKey);
+                    assert mFavMovieObjectData != null;
+                    backdropUrl = mFavMovieObjectData.getBackdrop_path();
+                    mMovieObjectData = new Movie(mFavMovieObjectData.getMovieId(),
+                            mFavMovieObjectData.getOriginal_title(),
+                            mFavMovieObjectData.getVote_average(),
+                            mFavMovieObjectData.getOverview(),
+                            mFavMovieObjectData.getPoster_path(),
+                            backdropUrl,
+                            mFavMovieObjectData.getOriginal_language(),
+                            mFavMovieObjectData.getRelease_date(),
+                            mFavMovieObjectData.getAdult());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("DETAILS_MOVIE", "FavMovies -> Movies Object Intent");
+                }
+            }
+
         } else {
             return;
         }
@@ -146,10 +165,14 @@ public class DetailsMovie extends AppCompatActivity
         mDB = AppDatabase.getInstance(getApplicationContext());
 
         /** Load Backdrop Images */
-        if (mMovieObjectData.getBackdropImageURL() != null) {
+        if (mMovieObjectData.getBackdropImageURL() != null || backdropUrl != null) {
+            if (backdropUrl == null) {
+                backdropUrl = mMovieObjectData.getBackdropImageURL();
+            }
+
             /** Set placeholder and error images accordingly */
             Picasso.get()
-                    .load(mMovieObjectData.getBackdropImageURL())
+                    .load(backdropUrl)
                     .placeholder(R.drawable.placeholder_image)
                     .error(R.drawable.image_error)
                     .into(backdropImageView);
@@ -400,7 +423,7 @@ public class DetailsMovie extends AppCompatActivity
             // If the movie is not in Database, then it will return null
             // as we are trying to retrieve something that is not in Database
             if (favMovies != null) {
-                isMovieFav = favMovies.getIsMovieFav();
+                isMovieFav = true;
                 changeFabVisibility(isMovieFav);
             } else {
                 isMovieFav = false;
@@ -493,7 +516,7 @@ public class DetailsMovie extends AppCompatActivity
         ThreadExecutors
                 .getThreadExecutorsInstance()
                 .getDiskExecutor()
-                .execute(() -> mDB.moviesDAO().addMovieToFav(generateMovieForDB(true)));
+                .execute(() -> mDB.moviesDAO().addMovieToFav(generateMovieForDB()));
     }
 
     /**
@@ -503,7 +526,7 @@ public class DetailsMovie extends AppCompatActivity
         ThreadExecutors
                 .getThreadExecutorsInstance()
                 .getDiskExecutor()
-                .execute(() -> mDB.moviesDAO().removeFromFavourites(generateMovieForDB(false)));
+                .execute(() -> mDB.moviesDAO().removeFromFavourites(generateMovieForDB()));
     }
 
 
@@ -511,21 +534,28 @@ public class DetailsMovie extends AppCompatActivity
      * Generate FavMovies for DB operation for the Movie operations
      * If the movie is Favourite Movie in Database,
      * generate the object with isMovFav as false to remove from the database
-     *
+     * <p>
      * If the movie is not in Favourite Movie in Database,
      * generate the object with isMovFav as true to add the movie to the database
+     * <p>
+     * String mMovieName, String tmdbMovieID, String voteAverage,
+     * String movieOverview, String posterPath, String backdropPath,
+     * String originalLanguage, String releaseDate, String isMovieAdult
      *
-     * @param isFav Is the Movie fav
      * @return
      */
     @NonNull
-    private FavMovies generateMovieForDB(Boolean isFav) {
+    private FavMovies generateMovieForDB() {
         return new FavMovies(
                 mMovieObjectData.getMovieName(),
-                isFav,
+                mMovieObjectData.getMovieId(),
                 mMovieObjectData.getAverageVote(),
+                mMovieObjectData.getMovieDescription(),
                 mMovieObjectData.getImageURL(),
-                mMovieObjectData.getMovieId());
+                mMovieObjectData.getBackdropImageURL(),
+                mMovieObjectData.getMovieLanguage(),
+                mMovieObjectData.getReleaseDate(),
+                mMovieObjectData.getMovieRestrictions());
     }
 
 

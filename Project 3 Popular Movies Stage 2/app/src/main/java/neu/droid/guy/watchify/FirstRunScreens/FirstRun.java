@@ -63,7 +63,6 @@ public class FirstRun extends AppCompatActivity implements VolleyRequestQueueSin
         /**Initialization*/
         setContentView(R.layout.activity_first_run);
         ButterKnife.bind(this);
-        BuildUrl.setContext(this);
         queue = VolleyRequestQueueSingleton.getInstance(FirstRun.this).getRequestQueue();
         movieObjects = new ArrayList<>();
         if (getSupportActionBar() != null) {

@@ -65,7 +65,7 @@ public class VolleyRequestQueueSingleton {
      * @param urlToHit
      */
     public void commonNetworkRequest(String urlToHit, String dataType) {
-//        Log.e(LOG_TAG, urlToHit);
+        Log.e(LOG_TAG, urlToHit);
         NetworkRequest networkRequest = (url) -> {
             JsonObjectRequest objectRequest = new JsonObjectRequest(
                     Request.Method.GET,

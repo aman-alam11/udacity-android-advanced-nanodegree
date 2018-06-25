@@ -1,6 +1,7 @@
 package neu.droid.guy.watchify.FavActivity;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,19 +23,24 @@ import neu.droid.guy.watchify.R;
 
 public class FavMoviesAdapter extends RecyclerView.Adapter<FavMoviesAdapter.FavViewHolder> {
 
-    List<FavMovies> listOfFavMovies;
-    private onItemClicked itemClicked;
+    private List<FavMovies> listOfFavMovies;
+    private onUnfavouriteButtonClicked unfavoriteClicked;
 
-    public interface onItemClicked {
-        void getMovieClicked(FavMovies movieToDelete);
+    public interface onUnfavouriteButtonClicked {
+        void getMovieClicked(FavMovies movieToDelete, Boolean shoudlDelete);
     }
+
 
     /**
      * Default Constructor
      */
-    public FavMoviesAdapter(List<FavMovies> listOfMovies, onItemClicked itemClicked) {
+    public FavMoviesAdapter(List<FavMovies> listOfMovies,
+                            onUnfavouriteButtonClicked itemClicked) {
+//    },
+//                            onDetailsMovieClicked detailsMovieClicked) {
         this.listOfFavMovies = listOfMovies;
-        this.itemClicked = itemClicked;
+        this.unfavoriteClicked = itemClicked;
+//        this.getDetailsMovie = detailsMovieClicked;
     }
 
     /**
@@ -86,9 +92,9 @@ public class FavMoviesAdapter extends RecyclerView.Adapter<FavMoviesAdapter.FavV
      */
     @Override
     public void onBindViewHolder(@NonNull FavViewHolder holder, int position) {
-        holder.favMovieNameTextView.setText(listOfFavMovies.get(position).getMovieName());
+        holder.favMovieNameTextView.setText(listOfFavMovies.get(position).getOriginal_title());
         try {
-            Float movieRating = Float.valueOf(listOfFavMovies.get(position).getMovieRating());
+            Float movieRating = Float.valueOf(listOfFavMovies.get(position).getVote_average());
             holder.ratingsTextView.setText(String.valueOf(movieRating / 2));
             holder.favMovieRatingBar.setRating(movieRating / 2);
         } catch (Exception e) {
@@ -122,13 +128,17 @@ public class FavMoviesAdapter extends RecyclerView.Adapter<FavMoviesAdapter.FavV
         TextView ratingsTextView;
         @BindView(R.id.remove_fav_button_fav_screen)
         ImageView removeFavButton;
+        @BindView(R.id.root_view_item_fav_screen)
+        CardView rootCardView;
 
         FavViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.findViewById(R.id.remove_fav_button_fav_screen).setOnClickListener(v1 -> {
-                itemClicked.getMovieClicked(listOfFavMovies.get(getAdapterPosition()));
+                unfavoriteClicked.getMovieClicked(listOfFavMovies.get(getAdapterPosition()), true);
             });
+            itemView.findViewById(R.id.root_view_item_fav_screen).setOnClickListener(v ->
+                    unfavoriteClicked.getMovieClicked(listOfFavMovies.get(getAdapterPosition()), false));
         }
 
     }
