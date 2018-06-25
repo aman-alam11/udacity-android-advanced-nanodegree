@@ -120,6 +120,9 @@ public class ShowFavMovies extends AppCompatActivity implements FavMoviesAdapter
         }
     }
 
+    /**
+     * Setup recycler view and view model for favourite movies
+     */
     private void setUpViewModel() {
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         viewModel.getListOfMovies().observe(this, new Observer<List<FavMovies>>() {
