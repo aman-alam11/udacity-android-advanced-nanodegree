@@ -1,5 +1,8 @@
 package neu.droid.guy.watchify.FavActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,33 +17,35 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import neu.droid.guy.watchify.POJO.FavMovies;
+import neu.droid.guy.watchify.POJO.Movie;
 import neu.droid.guy.watchify.R;
+import timber.log.Timber;
 
 public class FavMoviesAdapter extends RecyclerView.Adapter<FavMoviesAdapter.FavViewHolder> {
 
-    private List<FavMovies> listOfFavMovies;
+    private List<Movie> listOfFavMovies;
     private onUnfavouriteButtonClicked unfavoriteClicked;
+    private final String LOG_TAG = getClass().getSimpleName();
 
     public interface onUnfavouriteButtonClicked {
-        void getMovieClicked(FavMovies movieToDelete, Boolean shoudlDelete);
+        void getMovieClicked(Movie movieToDelete, Boolean shoudlDelete);
     }
 
 
     /**
      * Default Constructor
      */
-    public FavMoviesAdapter(List<FavMovies> listOfMovies,
+    public FavMoviesAdapter(List<Movie> listOfMovies,
                             onUnfavouriteButtonClicked itemClicked) {
-//    },
-//                            onDetailsMovieClicked detailsMovieClicked) {
         this.listOfFavMovies = listOfMovies;
         this.unfavoriteClicked = itemClicked;
-//        this.getDetailsMovie = detailsMovieClicked;
     }
 
     /**
@@ -92,14 +97,32 @@ public class FavMoviesAdapter extends RecyclerView.Adapter<FavMoviesAdapter.FavV
      */
     @Override
     public void onBindViewHolder(@NonNull FavViewHolder holder, int position) {
-        holder.favMovieNameTextView.setText(listOfFavMovies.get(position).getOriginal_title());
+        holder.favMovieNameTextView.setText(listOfFavMovies.get(position).getMovieName());
         try {
-            Float movieRating = Float.valueOf(listOfFavMovies.get(position).getVote_average());
+            Float movieRating = Float.valueOf(listOfFavMovies.get(position).getAverageVote());
             holder.ratingsTextView.setText(String.valueOf(movieRating / 2));
             holder.favMovieRatingBar.setRating(movieRating / 2);
         } catch (Exception e) {
-            Log.e("FAV_MOVIE_RATING", e.getMessage());
+            Timber.e(e);
         }
+
+        Picasso.get().load(listOfFavMovies.get(position).getBackdropImageURL()).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                holder.rootCardView.setBackground(new BitmapDrawable(bitmap));
+                // Set Alpha to 12.5%
+                holder.rootCardView.getBackground().setAlpha(32);
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                Log.e(LOG_TAG, e.getMessage());
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+            }
+        });
     }
 
     /**

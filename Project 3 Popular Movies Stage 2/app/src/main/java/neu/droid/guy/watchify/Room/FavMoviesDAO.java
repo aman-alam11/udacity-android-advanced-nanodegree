@@ -10,35 +10,35 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import neu.droid.guy.watchify.POJO.FavMovies;
+import neu.droid.guy.watchify.POJO.Movie;
 
 @Dao
 public interface FavMoviesDAO {
     /**
      * QUERIES
      */
-    @Query("SELECT * FROM FavouritesTable")
-    LiveData<List<FavMovies>> getAllFavMovies();
+    @Query("SELECT * FROM FavouriteTable")
+    LiveData<List<Movie>> getAllFavMovies();
 
-    @Query("SELECT * FROM FavouritesTable where id = :id")
-    LiveData<FavMovies> getMovieById(String id);
+    @Query("SELECT * FROM FavouriteTable where id = :id")
+    LiveData<Movie> getMovieById(String id);
 
     /**
      * INSERTIONS
      */
     @Insert
-    void addMovieToFav(FavMovies movieToAdd);
+    void addMovieToFav(Movie movieToAdd);
 
     /**
      * UPDATES
      */
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateObject(FavMovies movieToUpdate);
+    void updateObject(Movie movieToUpdate);
 
 
     /**
      * DELETIONS
      */
     @Delete
-    void removeFromFavourites(FavMovies movies);
+    void removeFromFavourites(Movie movies);
 }

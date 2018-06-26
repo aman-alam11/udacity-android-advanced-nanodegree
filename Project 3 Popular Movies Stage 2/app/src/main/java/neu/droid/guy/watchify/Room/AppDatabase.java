@@ -4,10 +4,9 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import neu.droid.guy.watchify.POJO.Movie;
 
-import neu.droid.guy.watchify.POJO.FavMovies;
-
-@Database(entities = {FavMovies.class}, version = 1, exportSchema = false)
+@Database(entities = {Movie.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private final static String DATABASE_NAME = "watchifydb";

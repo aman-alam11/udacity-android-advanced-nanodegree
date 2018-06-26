@@ -1,19 +1,15 @@
 package neu.droid.guy.watchify.FavActivity;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,13 +19,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import neu.droid.guy.watchify.DetailsActivity.DetailsMovie;
-import neu.droid.guy.watchify.POJO.FavMovies;
+import neu.droid.guy.watchify.POJO.Movie;
 import neu.droid.guy.watchify.R;
 import neu.droid.guy.watchify.Room.AppDatabase;
-import neu.droid.guy.watchify.ViewModel.AddMovieViewModel;
 import neu.droid.guy.watchify.ViewModel.MainViewModel;
 import neu.droid.guy.watchify.ViewModel.ThreadExecutors;
-import neu.droid.guy.watchify.ViewModel.ViewModelFactory;
+
+import static neu.droid.guy.watchify.MainActivity.MainActivity.detailsIntentDataKey;
 
 public class ShowFavMovies extends AppCompatActivity
         implements FavMoviesAdapter.onUnfavouriteButtonClicked {
@@ -76,12 +72,9 @@ public class ShowFavMovies extends AppCompatActivity
                 getResources().getString(R.string.snackbar_tap_message),
                 Snackbar.LENGTH_INDEFINITE);
         snackBar.getView().setPadding(SNACKBAR_PADDING, 0, SNACKBAR_PADDING, SNACKBAR_PADDING);
-        snackBar.setAction(getResources().getString(R.string.snackbar_button_title), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isSnackBarVisible = false;
-                snackBar.dismiss();
-            }
+        snackBar.setAction(getResources().getString(R.string.snackbar_button_title), v -> {
+            isSnackBarVisible = false;
+            snackBar.dismiss();
         });
     }
 
@@ -128,19 +121,20 @@ public class ShowFavMovies extends AppCompatActivity
      */
     private void setUpViewModel() {
         MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        viewModel.getListOfMovies().observe(this, new Observer<List<FavMovies>>() {
+        viewModel.getListOfMovies().observe(this, new Observer<List<Movie>>() {
             @Override
-            public void onChanged(@Nullable List<FavMovies> favMovies) {
+            public void onChanged(@Nullable List<Movie> favMovies) {
                 if (favMovies == null || favMovies.size() == 0) {
-                    Toast.makeText(ShowFavMovies.this, "No Favourite Movies", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShowFavMovies.this,
+                            getResources().getString(R.string.no_fav_movie),
+                            Toast.LENGTH_SHORT).show();
                     noDataTextView.setVisibility(View.VISIBLE);
                     if (snackBar != null && snackBar.isShown()) {
                         isSnackBarVisible = false;
                         snackBar.dismiss();
                     }
                 }
-                mFavMoviesAdapter = new FavMoviesAdapter(favMovies,
-                        ShowFavMovies.this);
+                mFavMoviesAdapter = new FavMoviesAdapter(favMovies, ShowFavMovies.this);
                 favRecyclerView.setAdapter(mFavMoviesAdapter);
                 favRecyclerView.setVisibility(View.VISIBLE);
                 favProgressBar.setVisibility(View.INVISIBLE);
@@ -150,7 +144,7 @@ public class ShowFavMovies extends AppCompatActivity
     }
 
     @Override
-    public void getMovieClicked(FavMovies movie, Boolean shouldDelete) {
+    public void getMovieClicked(Movie movie, Boolean shouldDelete) {
         if (shouldDelete) {
             mDB = AppDatabase.getInstance(getApplicationContext());
             ThreadExecutors
@@ -159,7 +153,7 @@ public class ShowFavMovies extends AppCompatActivity
                     .execute(() -> mDB.moviesDAO().removeFromFavourites(movie));
         } else {
             Intent openDetailsIntent = new Intent(ShowFavMovies.this, DetailsMovie.class);
-            openDetailsIntent.putExtra("DETAILS_EXTRA_FAV", movie);
+            openDetailsIntent.putExtra(detailsIntentDataKey, movie);
             startActivity(openDetailsIntent);
         }
     }

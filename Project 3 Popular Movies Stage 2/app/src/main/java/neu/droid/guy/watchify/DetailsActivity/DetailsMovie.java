@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -38,7 +39,6 @@ import neu.droid.guy.watchify.Lambdas.GetKeysLambda;
 import neu.droid.guy.watchify.NetworkingUtils.BuildUrl;
 import neu.droid.guy.watchify.NetworkingUtils.NetworkConnectivityChecker;
 import neu.droid.guy.watchify.NetworkingUtils.VolleyRequestQueueSingleton;
-import neu.droid.guy.watchify.POJO.FavMovies;
 import neu.droid.guy.watchify.POJO.ListOfReviews;
 import neu.droid.guy.watchify.POJO.ListOfVideos;
 import neu.droid.guy.watchify.POJO.Movie;
@@ -51,7 +51,6 @@ import neu.droid.guy.watchify.ViewModel.ThreadExecutors;
 import neu.droid.guy.watchify.ViewModel.ViewModelFactory;
 
 import static neu.droid.guy.watchify.MainActivity.MainActivity.detailsIntentDataKey;
-import static neu.droid.guy.watchify.MainActivity.MainActivity.detailsIntentFavDataKey;
 
 public class DetailsMovie extends AppCompatActivity
         implements VolleyRequestQueueSingleton.JSONRecievedCallback,
@@ -75,12 +74,6 @@ public class DetailsMovie extends AppCompatActivity
     RatingBar mRatingsBar;
     @BindView(R.id.review_title_text_view)
     TextView mReviewTitleTextView;
-
-    /**
-     * Parent Card Views
-     */
-    @BindView(R.id.review_parent_layout)
-    CardView reviewParentView;
 
     /**
      * Recycler Views and progress bars, adapters
@@ -107,7 +100,6 @@ public class DetailsMovie extends AppCompatActivity
     private MaterialDialog reviewDialog;
     private String backdropUrl;
     Movie mMovieObjectData = null;
-    FavMovies mFavMovieObjectData = null;
 
 
     @Override
@@ -123,26 +115,6 @@ public class DetailsMovie extends AppCompatActivity
             if (getIntent().hasExtra(detailsIntentDataKey)) {
                 mMovieObjectData = getIntent().getExtras().getParcelable(detailsIntentDataKey);
             }
-            if (getIntent().hasExtra(detailsIntentFavDataKey)) {
-                try {
-                    mFavMovieObjectData = getIntent().getExtras().getParcelable(detailsIntentFavDataKey);
-                    assert mFavMovieObjectData != null;
-                    backdropUrl = mFavMovieObjectData.getBackdrop_path();
-                    mMovieObjectData = new Movie(mFavMovieObjectData.getMovieId(),
-                            mFavMovieObjectData.getOriginal_title(),
-                            mFavMovieObjectData.getVote_average(),
-                            mFavMovieObjectData.getOverview(),
-                            mFavMovieObjectData.getPoster_path(),
-                            backdropUrl,
-                            mFavMovieObjectData.getOriginal_language(),
-                            mFavMovieObjectData.getRelease_date(),
-                            mFavMovieObjectData.getAdult());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("DETAILS_MOVIE", "FavMovies -> Movies Object Intent");
-                }
-            }
-
         } else {
             return;
         }
@@ -158,14 +130,13 @@ public class DetailsMovie extends AppCompatActivity
             }
         }
 
-        assert mMovieObjectData != null;
         /** Make a call to internet to get Movie Trailers using this id */
         movieId = mMovieObjectData.getMovieId();
         /** Init for Fav Movie Database */
         mDB = AppDatabase.getInstance(getApplicationContext());
 
         /** Load Backdrop Images */
-        if (mMovieObjectData.getBackdropImageURL() != null || backdropUrl != null) {
+        if (mMovieObjectData.getBackdropImageURL() != null) {
             if (backdropUrl == null) {
                 backdropUrl = mMovieObjectData.getBackdropImageURL();
             }
@@ -513,20 +484,46 @@ public class DetailsMovie extends AppCompatActivity
      * Add Data to DB in the end onPause or onDestroy or onBackPressed
      */
     private void addToDB() {
+        Movie movie = generateMovieForDB();
+        if (isDataNull(movie)) {
+            return;
+        }
+
         ThreadExecutors
                 .getThreadExecutorsInstance()
                 .getDiskExecutor()
-                .execute(() -> mDB.moviesDAO().addMovieToFav(generateMovieForDB()));
+                .execute(() -> mDB.moviesDAO().addMovieToFav(movie));
+    }
+
+    /**
+     * Check if the object is null or not before doing any Database operation
+     *
+     * @param objectToCheck The object which we want to check if its null or not
+     * @return true if the object is null
+     */
+    private boolean isDataNull(Object objectToCheck) {
+        if (objectToCheck == null) {
+            Snackbar.make(getWindow().getDecorView(),
+                    getResources().getString(R.string.database_error),
+                    Snackbar.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
     /**
      * Remove Data to DB in the end onPause or onDestroy or onBackPressed
      */
     private void removeFromDB() {
+        Movie movie = generateMovieForDB();
+        if (isDataNull(movie)) {
+            return;
+        }
+
         ThreadExecutors
                 .getThreadExecutorsInstance()
                 .getDiskExecutor()
-                .execute(() -> mDB.moviesDAO().removeFromFavourites(generateMovieForDB()));
+                .execute(() -> mDB.moviesDAO().removeFromFavourites(movie));
     }
 
 
@@ -545,17 +542,8 @@ public class DetailsMovie extends AppCompatActivity
      * @return
      */
     @NonNull
-    private FavMovies generateMovieForDB() {
-        return new FavMovies(
-                mMovieObjectData.getMovieName(),
-                mMovieObjectData.getMovieId(),
-                mMovieObjectData.getAverageVote(),
-                mMovieObjectData.getMovieDescription(),
-                mMovieObjectData.getImageURL(),
-                mMovieObjectData.getBackdropImageURL(),
-                mMovieObjectData.getMovieLanguage(),
-                mMovieObjectData.getReleaseDate(),
-                mMovieObjectData.getMovieRestrictions());
+    private Movie generateMovieForDB() {
+        return mMovieObjectData;
     }
 
 

@@ -1,22 +1,32 @@
 package neu.droid.guy.watchify.POJO;
 
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import neu.droid.guy.watchify.NetworkingUtils.BuildUrl;
 import neu.droid.guy.watchify.NetworkingUtils.GetImageDimensions;
 
+@Entity(tableName = "FavouriteTable")
 public class Movie implements Parcelable {
-    private String id;
-    private String original_title;
-    private String vote_average;
-    private String overview;
-    private String poster_path;
-    private String backdrop_path;
-    private String original_language;
-    private String release_date;
-    private String adult;
 
+    @PrimaryKey
+    @NonNull
+    public String id;
+    public String original_title;
+    public String vote_average;
+    public String overview;
+    public String poster_path;
+    public String backdrop_path;
+    public String original_language;
+    public String release_date;
+    public String adult;
+
+    @Ignore
     public Movie(Parcel in) {
         id = in.readString();
         original_title = in.readString();

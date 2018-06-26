@@ -41,5 +41,5 @@
     <string name="review_tag">Reviews</string>
     <string name="snackbar_button_title">Dismiss</string>
     <string name="snackbar_tap_message">Tap the Top Rightmost star to Remove from Favorites</string>
-    <string name="no_fav_movie">NO FAVOURITE MOVIE YET</string>
+    <string name="no_fav_movie">No Favorite Movies</string>
 </resources>
