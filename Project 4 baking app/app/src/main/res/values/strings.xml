@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">baking-app</string>
+    <string name="checklist_text_view_text">Make A Checklist Of All The Ingredients</string>
+    <string name="empty_ingredients_array_toast">Ingredients not available</string>
+    <string name="show_ingredients_button_text">Ingredients for: </string>
+    <string name="show_ingredients_button_text_generic">Show Ingredients </string>
+    <string name="refresh_data">Refresh Data</string>
+    <string name="full_screen">Full Screen</string>
+    <string name="ingredients_dialog_title">Ingredients for recipe</string>
+    <string name="no_internet_connectivity">No Internet Connection Available</string>
+    <string name="no_internet_connectivity_video">Can\'t play videos. Please connect to Internet</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="widget_chooser">Show this as Widget</string>
+    <string name="widget_picker_positive_button_text">Show Chosen Recipe Ingredients Widget</string>
+    <string name="widget_chooser_error_nodata">Unable to change widget at this time, please try again</string>
+    <string name="widget_chooser_title">Choose widget for recipe:</string>
+    <string name="neutral_button_text">Ok</string>
+    <string name="no_refresh_required">All caught Up</string>
+    <string name="get_new_data">Fetching Data</string>
+</resources>
