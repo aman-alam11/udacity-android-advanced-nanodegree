@@ -31,3 +31,12 @@ As part of Google Udacity Developer Scholarship awarded to me, I have to complet
 * Card Views
 * Using Volley to check cache and use it (no need to make futile internet calls everytime)
 * Use of parcelable to transfer data with Intents
+
+### Project 5: Build it Bigger
+* An app with multiple flavors that uses multiple libraries and Google Cloud Endpoints.
+* The app has 4 modules:
+  * A Java library that provides jokes,
+  * A Google Cloud Endpoints (GCE) project that serves those jokes,
+  * An Android Library containing an activity for displaying jokes,
+  * An Android app that fetches jokes from the GCE module and passes them to the Android Library for display.
+  
